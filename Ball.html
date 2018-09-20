@@ -21,13 +21,14 @@
     const canvas = document.getElementById("screen");
     const ctx = canvas.getContext("2d");
     const FONTCOLOR = "gray";
+    const FPS = 30;
     ctx.fillStyle = FONTCOLOR;
     ctx.fillRect(0, 0, 1280, 720);
 
     let Ball = function (x, y, radius, color, xSpeed, ySpeed) {
         let thisBall = this;
-        this.x = x  || 640;
-        this.y = y  || 360;
+        this.x = x || 640;
+        this.y = y || 360;
         this.color = color || rainbow(Math.random());
         this.radius = radius || radNum(50, 20);
         this.xSpeed = xSpeed || radNum(10, 0);
@@ -56,14 +57,13 @@
 
         };
         this.spawBall = function (arr) {
-            arr.push(new Ball(this.x, this.y,undefined,this.color));
+            arr.push(new Ball(this.x, this.y, undefined, this.color));
         };
         this.setAndGetColor = function () {
             this.color = rainbow(Math.random());
             return this.color;
         };
     };
-
 
 
     let ballBounce = {
@@ -139,18 +139,6 @@
             }
         }
     };
-
-    let game={
-        balls:[],
-        spawner: new Ball()
-    }
-
-
-
-
-
-
-
 </script>
 </body>
 </html>
