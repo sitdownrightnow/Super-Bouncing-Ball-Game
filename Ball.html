@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ball</title>
+    <script src="CoreFun.js"></script>
+    <style>
+        canvas {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<canvas id="screen" style="border: 2px solid black;" height="720" width="1280"></canvas>
+<script>
+    const canvas = document.getElementById("screen");
+    const ctx = canvas.getContext("2d");
+    const FONTCOLOR = "gray";
+    ctx.fillStyle = FONTCOLOR;
+    ctx.fillRect(0, 0, 1280, 720);
+
+    let ballBounce = {
+        minimumDistance : 2,
+        ballToEdge: function (ball1) {
+            if (ball1.x <= ball1.radius || ball1.x >= (1280 - ball1.radius)) {
+                ball1.xSpeed *= -1;
+            }
+            if (ball1.y <= ball1.radius || ball1.y >= (720 - ball1.radius)) {
+                ball1.ySpeed *= -1;
+            }
+        },
+        ballToBall: function (ball1, otherBall) {
+            for (let ball2 of otherBall) {
+                let ballMaxDistance = ball2.radius + ball1.radius +
+                    Math.sqrt(
+                        Math.abs(ball2.xSpeed - ball1.xSpeed) * Math.abs(ball2.xSpeed - ball1.xSpeed) +
+                        Math.abs(ball2.ySpeed - ball1.ySpeed) * Math.abs(ball2.ySpeed - ball1.ySpeed));
+                let ballRealDistance = Math.sqrt(
+                    Math.abs(ball2.x - ball1.x) * Math.abs(ball2.x - ball1.x) +
+                    Math.abs(ball2.y - ball1.y) * Math.abs(ball2.y - ball1.y));
+                if (ballMaxDistance >= ballRealDistance) {
+
+                    let ball1Afterx =
+                        ((ball1.radius - ball2.radius) * ball1.xSpeed
+                            + 2 * ball2.radius * ball2.xSpeed) / ballMaxDistance;
+                    let ball1Aftery =
+                        ((ball1.radius - ball2.radius) * ball1.ySpeed
+                            + 2 * ball2.radius * ball2.ySpeed) / ballMaxDistance;
+                    let ball2Afterx =
+                        ((ball2.radius - ball1.radius) * ball2.xSpeed
+                            + 2 * ball1.radius * ball1.xSpeed) / ballMaxDistance;
+                    let ball2Aftery =
+                        ((ball2.radius - ball1.radius) * ball2.ySpeed
+                            + 2 * ball1.radius * ball1.ySpeed) / ballMaxDistance;
+                    ball1.xSpeed = ball1Afterx;
+                    ball1.ySpeed = ball1Aftery;
+                    ball2.xSpeed = ball2Afterx;
+                    ball2.ySpeed = ball2Aftery;
+                }
+            }
+        },
+    };
+
+
+    let Ball = function (xSpeed, ySpeed, color, radius, x, y) {
+        let thisBall = this;
+        this.x = x || radNum(80, 1200) || 640;
+        this.y = y || radNum(80, 620) || 360;
+        this.color = color || rainbow(Math.random());
+        this.radius = radius || radNum(65, 25);
+        this.xSpeed = xSpeed || radNum(5, 2);
+        this.ySpeed = ySpeed || radNum(5, 2);
+
+
+        this.drawBall = function () {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        };
+
+        this.nextState = function () {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+            ctx.fillStyle = FONTCOLOR;
+            ctx.fill();
+            this.x += this.xSpeed;
+            this.y += this.ySpeed;
+            this.drawBall();
+
+        };
+
+
+        this.setAndGetColor = function () {
+            this.color = rainbow(Math.random());
+            return this.color;
+        };
+    };
+    let ball = [new Ball(), new Ball(), new Ball(), new Ball()];
+
+    function test(arr) {
+        for (let e of arr) {
+            ballBounce.ballToEdge(e);
+            ballBounce.ballToBall(e, arr);
+            e.nextState();
+        }
+        setTimeout(test, 10, ball);
+    }
+
+    test(ball);
+
+
+</script>
+</body>
+</html>
