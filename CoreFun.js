@@ -46,6 +46,14 @@ function radNum(max, min) {
     return Math.round(Math.random() * max + min);
 }
 
+function sprtOfSpr(a,b ) {
+    return Math.sqrt(
+        (Math.abs(a) * Math.abs(a)) +
+        (Math.abs(b) * Math.abs(b))
+    );
+
+}
+
 function d(x, y) {
     ctx.beginPath();
     ctx.moveTo(0, 0);
