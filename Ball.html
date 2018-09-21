@@ -12,7 +12,7 @@
             left: 0;
             right: 0;
             margin: auto;
-            background-color: gray;
+            background-color: transparent;
         }
     </style>
 </head>
@@ -131,7 +131,7 @@
                         while (ballMaxDistance >= ballRealDistance) {
                             ball1.nextState();
                             ball2.nextState();
-                            ballRealDistance = sprtOfSpr(ball2.x - ball1.x, ball2.y - ball1.y);
+                            ballRealDistance = sqrtOf2Sqr(ball2.x - ball1.x, ball2.y - ball1.y);
                         }
                     }
 
@@ -162,9 +162,6 @@
         this.speed = speed || 1;
         this.angle = 0;
 
-        this.set4AngleOfSquare = function () {
-
-        };
 
         this.increaseAngle = function () {
             this.angle += 0.5;
@@ -174,7 +171,7 @@
         };
 
         this.drawBall = function (fill) {
-            let a = sprtOfSpr(this.radius, this.radius);
+            let a = sqrtOf2Sqr(this.radius, this.radius);
             let startPoint = Math.sqrt(this.radius * this.radius / 2);
             ctx.beginPath();
             ctx.save();

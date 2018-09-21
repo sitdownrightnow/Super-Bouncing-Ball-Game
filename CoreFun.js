@@ -1,3 +1,7 @@
+const canvas = document.getElementById("screen");
+const ctx = canvas.getContext("2d");
+const BACKCOLOR = "gray";
+
 function rainbow(h) {
     let r, g, b;
     let i = ~~(h * 6);
@@ -46,7 +50,7 @@ function radNum(max, min) {
     return Math.round(Math.random() * max + min);
 }
 
-function sprtOfSpr(a,b ) {
+function sqrtOf2Sqr(a,b ) {
     return Math.sqrt(
         (Math.abs(a) * Math.abs(a)) +
         (Math.abs(b) * Math.abs(b))
@@ -59,5 +63,8 @@ function d(x, y) {
     ctx.moveTo(0, 0);
     ctx.lineTo(x, y);
     ctx.stroke();
+}
+function cleanCanvas() {
+    ctx.clearRect(0,0,1280,720);
 }
 
