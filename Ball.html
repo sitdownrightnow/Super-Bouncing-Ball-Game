@@ -26,11 +26,11 @@
     ctx.fillRect(0, 0, 1280, 720);
 
     let Ball = function (x, y, radius, color, xSpeed, ySpeed) {
-        let thisBall = this;
+        this.isExist = true;
         this.x = x || 640;
         this.y = y || 360;
         this.color = color || rainbow(Math.random());
-        this.radius = radius || radNum(50, 20);
+        this.radius = radius || radNum(30, 10);
         this.xSpeed = xSpeed || radNum(10, 0);
         this.ySpeed = ySpeed || radNum(10, 0);
 
@@ -49,6 +49,10 @@
             ctx.fillStyle = FONTCOLOR;
             ctx.fill();
         };
+        this.setAndGetColor = function () {
+            this.color = rainbow(Math.random());
+            return this.color;
+        };
         this.nextState = function () {
             this.clearBall();
             this.x += this.xSpeed;
@@ -59,10 +63,10 @@
         this.spawBall = function (arr) {
             arr.push(new Ball(this.x, this.y, undefined, this.color));
         };
-        this.setAndGetColor = function () {
-            this.color = rainbow(Math.random());
-            return this.color;
-        };
+        this.remove = function () {
+            this.isExist = false;
+            this.clearBall();
+        }
     };
 
 
@@ -117,28 +121,100 @@
                 }
             }
         },
-        ballToObj: function (obj, balls, isCircle) {
-            for (let ball of balls) {
-                if (isCircle) {
-                    let ballMaxDistance = ball.radius + obj.radius;
-                    let ballRealDistance = sprtOfSpr(ball.x - obj.x, ball.y - obj.y);
-                    if (ballRealDistance !== 0) {
-                        if (ballRealDistance <= ballMaxDistance) {
-                            ball.xSpeed *= -1;
-                            ball.ySpeed *= -1;
-                            while (ballRealDistance <= ballMaxDistance) {
-                                ball.nextState();
-                                ballRealDistance = sprtOfSpr(ball.x - obj.x, ball.y - obj.y);
-                            }
-                        }
+
+        ballToObj: function (ball, obj) {
+            let ballMaxDistance = ball.radius + obj.radius;
+            let ballRealDistance = sprtOfSpr(ball.x - obj.x, ball.y - obj.y);
+            if (ballRealDistance !== 0) {
+                if (ballRealDistance <= ballMaxDistance) {
+                    ball.xSpeed *= -1;
+                    ball.ySpeed *= -1;
+                    while (ballRealDistance <= ballMaxDistance) {
+                        ball.nextState();
+                        ballRealDistance = sprtOfSpr(ball.x - obj.x, ball.y - obj.y);
                     }
-
-                } else {
-
                 }
             }
         }
     };
+    let Ship = function (x, y, xspeed, yspeed) {
+        this.originType = Ball;
+        this.originType.call(this, x, y, 10, "black", xspeed, yspeed);
+
+        this.moveLeft = function () {
+            if (this.xSpeed >= 0) {
+                this.xSpeed *= -1;
+                this.nextState();
+            }
+        };
+        this.moveRight = function () {
+            if (this.xSpeed <= 0) {
+                this.xSpeed *= -1;
+                this.nextState()
+            }
+        };
+        this.moveUp = function () {
+            if (this.ySpeed >= 0) {
+                this.ySpeed *= -1;
+                this.nextState()
+            }
+        };
+        this.moveDown = function () {
+            if (this.ySpeed <= 0) {
+                this.ySpeed *= -1;
+                this.nextState();
+            }
+        };
+    };
+    let ship = new Ship(200,200,5,5);
+    moveingship();
+    function moveingship(){
+        ballBounce.ballToEdge(ship);
+        ship.nextState();
+        setTimeout(moveingship,20);
+    }
+    window.addEventListener("keydown", function (evt) {
+        switch (evt.key) {
+            case "ArrowRight":
+                ship.moveRight();
+                break;
+            case "ArrowLeft":
+                ship.moveLeft();
+                break;
+            case"ArrowUp":
+                ship.moveUp();
+                break;
+            case "ArrowDown":
+                ship.moveDown();
+
+        }
+    });
+    /* let motherball = new Ball(640, 360, 50, undefined, 0, 0);
+     let balls = bundleOfBall(6);
+     testGame(balls, motherball);
+
+
+     function bundleOfBall(n) {
+         let arr = [];
+         for (let i = 0; i < n; i++) {
+             arr.push(new Ball());
+         }
+         return arr;
+     }
+
+     function testGame(arr, obj) {
+         for (let e of arr) {
+             ballBounce.ballToEdge(e);
+             ballBounce.ballToBall(e, arr);
+             ballBounce.ballToObj(e, obj);
+             e.nextState();
+             obj.drawBall();
+             ship.drawBall();
+         }
+         setTimeout(testGame, 20, arr, obj)
+     }*/
+
+
 </script>
 </body>
 </html>
