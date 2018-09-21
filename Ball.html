@@ -54,7 +54,8 @@
             this.x += this.xSpeed;
             this.y += this.ySpeed;
             this.drawBall();
-
+            console.log(performance.now());
+            console.log("ball next");
         };
         this.remove = function (arr) {
             if (this.isExist) {
@@ -70,15 +71,14 @@
         };
         this.explore = function (n, arr) {
             this.isExist = false;
-
+            this.clearBall();
             if (this.radius > 10) {
                 for (let e of arr) {
                     if (e.isExist) {
                     }
                     else {
-                        e.clearBall();
                         for (let i = 0; i < n; i++) {
-                            arr.push(new Ball(this.x, this.y, this.radius / n, this.color))
+                            arr.push(new Ball(this.x, this.y, this.radius / 2, this.color))
                         }
                     }
 
@@ -149,6 +149,7 @@
                     while (ballRealDistance <= ballMaxDistance) {
                         ball.nextState();
                         ballRealDistance = sprtOfSpr(ball.x - obj.x, ball.y - obj.y);
+                        console.log("run")
                     }
                     return true;
                 }
@@ -157,11 +158,9 @@
     };
     let Ship = function (x, y, speed, color) {
         this.originType = Ball;
-        this.originType.call(this, x, y, 30, color);
+        this.originType.call(this, x, y, 30, color, 0.1, 0.1);
         this.speed = speed || 1;
         this.angle = 0;
-        this.xSpeed = 0;
-        this.ySpeed = 0;
 
         this.set4AngleOfSquare = function () {
 
@@ -194,6 +193,8 @@
             this.y += this.ySpeed;
             this.increaseAngle();
             this.drawBall();
+            console.log(performance.now());
+            console.log("Ship +nextsaed")
         };
 
         this.moveLeft = function () {
@@ -262,8 +263,9 @@
     });
     let motherball = new Spawnball();
     let ship = new Ship(200, 200, 1);
-    let balls = bundleOfBall(20);
+    let balls = bundleOfBall(2);
     testGame(balls, motherball);
+
 
     function bundleOfBall(n) {
         let arr = [];
@@ -276,26 +278,21 @@
     function testGame(arr, obj) {
         for (let e of arr) {
             if (e.isExist) {
-                /*if (ballBounce.ballToObj(e, ship)) {
-                }
                 ballBounce.ballToEdge(e);
                 ballBounce.ballToEdge(ship);
                 ballBounce.ballToBall(e, arr);
                 ballBounce.ballToObj(e, obj);
+                if (ballBounce.ballToObj(e, ship)) {
+                    e.explore(3, balls);
+                }
                 ballBounce.ballToObj(ship, motherball);
-                e.nextState();*/
+                e.nextState();
                 obj.drawBall("black");
                 ship.nextState();
             }
         }
         setTimeout(testGame, 30, arr, obj)
     }
-
-
-    /*function spawn() {
-        motherball.spawBall(balls);
-        setTimeout(spawn, 3000);
-    }*/
 </script>
 </body>
 </html>
